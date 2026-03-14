@@ -153,7 +153,7 @@ import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js'
 // ── Globals ──
 let scene, camera, renderer, composer, clock;
 let ship, shipGroup;
-let score = 0, shield = 100, speed = 0, baseSpeed = 0.8, maxSpeed = 2.5;
+let score = 0, shield = 205, speed = 0, baseSpeed = 0.8, maxSpeed = 2.5;
 let gameActive = false, boosting = false;
 let obstacles = [], pickups = [], lasers = [], particles = [];
 let gridFloor, sun, stars;
@@ -405,19 +405,19 @@ function spawnObstacle() {
 
   if (type < 0.4) {
     // Crystal pillar
-    const geo = new THREE.OctahedronGeometry((1 + Math.random() * 1.5) * 0.75, 0);
+    const geo = new THREE.OctahedronGeometry((1 + Math.random() * 1.5) * 0.85, 0);
     const mat = new THREE.MeshStandardMaterial({ color: 0xff0040, emissive: 0xff0040, emissiveIntensity: 0.5, wireframe: true, transparent: true, opacity: 0.8 });
     mesh = new THREE.Mesh(geo, mat);
     mesh.scale.y = 1.5 + Math.random() * 2;
   } else if (type < 0.7) {
     // Floating cube
-    const geo = new THREE.BoxGeometry(1.5, 1.5, 1.5);
+    const geo = new THREE.BoxGeometry(1.7, 1.7, 1.7);
     const mat = new THREE.MeshStandardMaterial({ color: 0x8b00ff, emissive: 0x8b00ff, emissiveIntensity: 0.4, wireframe: true });
     mesh = new THREE.Mesh(geo, mat);
     mesh.rotation.set(Math.random(), Math.random(), Math.random());
   } else {
     // Ring obstacle
-    const geo = new THREE.TorusGeometry(1.5, 0.225, 8, 16);
+    const geo = new THREE.TorusGeometry(1.7, 0.255, 8, 16);
     const mat = new THREE.MeshStandardMaterial({ color: 0xff2de2, emissive: 0xff2de2, emissiveIntensity: 0.6 });
     mesh = new THREE.Mesh(geo, mat);
     mesh.rotation.x = Math.PI / 2;
@@ -494,7 +494,7 @@ function checkCollisions() {
     if (shipBox.intersectsBox(pkBox)) {
       spawnExplosion(pk.position, 0x00f0ff, 20);
       score += 100;
-      shield = Math.min(100, shield + 15);
+      shield = Math.min(205, shield + 15);
       updateShieldBar();
       scene.remove(pk);
       pickups.splice(i, 1);
@@ -503,7 +503,7 @@ function checkCollisions() {
 }
 
 function updateShieldBar() {
-  document.getElementById('shield-fill').style.width = Math.max(0, shield) + '%';
+  document.getElementById('shield-fill').style.width = Math.max(0, shield / 205 * 100) + '%';
 }
 
 // ── Game State ──
@@ -518,7 +518,7 @@ function startGame() {
   pickups.forEach(p => scene.remove(p)); pickups = [];
   particles.forEach(p => scene.remove(p)); particles = [];
 
-  score = 0; shield = 100; speed = baseSpeed;
+  score = 0; shield = 205; speed = baseSpeed;
   ship.position.set(0, 1, 0);
   updateShieldBar();
   gameActive = true;
@@ -591,7 +591,7 @@ function animate() {
 
     // Spawn obstacles
     spawnTimer += dt;
-    if (spawnTimer > 0.8) { spawnTimer = 0; spawnObstacle(); if (Math.random() < 0.5) spawnObstacle(); }
+    if (spawnTimer > 0.6) { spawnTimer = 0; spawnObstacle(); if (Math.random() < 0.7) spawnObstacle(); }
 
     // Spawn pickups
     pickupTimer += dt;
